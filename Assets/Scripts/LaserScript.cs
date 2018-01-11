@@ -26,6 +26,7 @@ public class LaserScript : MonoBehaviour
 
     private float beamTime = 3f;
     private float beamTimeR = 0f;
+    private Vector3 CrosshairPlace;
 
     // Use this for initialization
     void Start()
@@ -33,6 +34,8 @@ public class LaserScript : MonoBehaviour
         _line = GetComponent<LineRenderer>();
         _light = GetComponent<Light>();
         _sfx = GetComponent<AudioSource>();
+
+        CrosshairPlace = GameObject.FindGameObjectWithTag("Crosshair").transform.position;
 
         _line.enabled = false;
         _light.enabled = false;
@@ -42,7 +45,6 @@ public class LaserScript : MonoBehaviour
         shooting = false;
         firstHit = true;
         beamTimeR = beamTime;
-
 
     }
 
@@ -86,16 +88,16 @@ public class LaserScript : MonoBehaviour
             beamTimeR -= Time.deltaTime;
             _line.enabled = true;
             _light.enabled = true;
-            Ray ray = new Ray(transform.position, Camera.main.transform.forward + transform.forward);
+            Ray ray = Camera.main.ScreenPointToRay(new Vector3(CrosshairPlace.x, CrosshairPlace.y, CrosshairPlace.z));
             RaycastHit hit;
-
-            _line.SetPosition(0, ray.origin);
+            
+            _line.SetPosition(0, transform.position);
             Vector3 endpoint = Vector3.zero;
             if (Physics.Raycast(ray, out hit, _gunRange))
                 endpoint = hit.point;
             else
                 endpoint = ray.GetPoint(_gunRange);
-
+            
             _line.SetPosition(1, endpoint);
 
             if (hit.collider != null)

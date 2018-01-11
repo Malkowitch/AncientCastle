@@ -25,7 +25,7 @@ public class DrainStamina : MonoBehaviour
             drain = true;
 
         if (drain)
-            Stamina -= Time.deltaTime * 2;
+            Stamina -= Time.deltaTime * 10;
         if (!drain && Stamina < 100)
         {
             Stamina += Time.deltaTime / 4;

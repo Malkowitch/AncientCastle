@@ -23,7 +23,6 @@ public class FPController : MonoBehaviour
     private float verticalVelocity = 0;
     private Transform player;
     private CharacterController cc;
-    private Rigidbody rb;
     private GameObject[] mainWeapons;
     private DrainStamina ds;
     #endregion
@@ -34,7 +33,7 @@ public class FPController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         player = Camera.main.transform;
         cc = GetComponent<CharacterController>();
-        rb = GetComponent<Rigidbody>();
+
         mainWeapons = GameObject.FindGameObjectsWithTag("MainWeapon");
         endText.enabled = false;
         ds = GetComponent<DrainStamina>();
@@ -60,8 +59,11 @@ public class FPController : MonoBehaviour
         float horizont = Input.GetAxis("Horizontal") * movementSpeed;
         if (Input.GetKey(KeyCode.LeftShift) && vertical > 0)
         {
-            vertical = vertical * 2.5f;
-            horizont = horizont * 2.5f;
+            if (ds.Stamina >= 0)
+            {
+                vertical = vertical * 2.5f;
+                horizont = horizont * 2.5f;
+            }
         }
         ds.Drain(vertical, horizont);
 
