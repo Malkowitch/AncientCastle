@@ -90,14 +90,15 @@ public class LaserScript : MonoBehaviour
             _light.enabled = true;
             Ray ray = Camera.main.ScreenPointToRay(new Vector3(CrosshairPlace.x, CrosshairPlace.y, CrosshairPlace.z));
             RaycastHit hit;
-            
+
+
             _line.SetPosition(0, transform.position);
             Vector3 endpoint = Vector3.zero;
             if (Physics.Raycast(ray, out hit, _gunRange))
                 endpoint = hit.point;
             else
                 endpoint = ray.GetPoint(_gunRange);
-            
+
             _line.SetPosition(1, endpoint);
 
             if (hit.collider != null)

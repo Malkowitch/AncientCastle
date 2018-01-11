@@ -8,6 +8,10 @@ TagManager:
   - MainWeapon
   - Victory
   - Dead
+  - PlayerHealth
+  - Defeat
+  - PlayerStamina
+  - Crosshair
   layers:
   - Default
   - TransparentFX
