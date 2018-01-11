@@ -529,6 +529,47 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!1 &224999102
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 224999103}
+  - component: {fileID: 224999104}
+  m_Layer: 0
+  m_Name: AttackingObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &224999103
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 224999102}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.4, y: 37.5, z: 8.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1153950140}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &224999104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 224999102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0232d2246b91c1e47aeca01c2395d4a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SightRange: 30
 --- !u!1001 &228924102
 Prefab:
   m_ObjectHideFlags: 0
@@ -1289,23 +1330,11 @@ RectTransform:
   m_AnchoredPosition: {x: -13.5, y: -1.227861}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &1153950136 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1840969913120236, guid: 751c7649a05fad84ea49638b2abd341b,
+--- !u!4 &1153950140 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 4424214303670004, guid: 751c7649a05fad84ea49638b2abd341b,
     type: 2}
   m_PrefabInternal: {fileID: 2138997054}
---- !u!114 &1153950141
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1153950136}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0232d2246b91c1e47aeca01c2395d4a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SightRange: 10
 --- !u!4 &1291055526 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4021266016307886, guid: 392a05bd229c33043ae112a856120172,
