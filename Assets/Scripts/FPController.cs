@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-[RequireComponent (typeof(CharacterController))]
+[RequireComponent(typeof(CharacterController))]
 public class FPController : MonoBehaviour
 {
     #region Public Movement
@@ -16,11 +17,15 @@ public class FPController : MonoBehaviour
     public float maxLimit = 45;
     #endregion
 
+    public Text endText;
+    public static int Kills { get; set; }
     #region Private
     private float verticalVelocity = 0;
     private Transform player;
     private CharacterController cc;
     private Rigidbody rb;
+    private GameObject[] mainWeapons;
+    private DrainStamina ds;
     #endregion
 
     // Use this for initialization
@@ -30,6 +35,9 @@ public class FPController : MonoBehaviour
         player = Camera.main.transform;
         cc = GetComponent<CharacterController>();
         rb = GetComponent<Rigidbody>();
+        mainWeapons = GameObject.FindGameObjectsWithTag("MainWeapon");
+        endText.enabled = false;
+        ds = GetComponent<DrainStamina>();
     }
 
     // Update is called once per frame
@@ -48,8 +56,14 @@ public class FPController : MonoBehaviour
         #endregion
 
         #region Movement
-        var vertical = Input.GetAxis("Vertical") * movementSpeed;
-        var horizont = Input.GetAxis("Horizontal") * movementSpeed;
+        float vertical = Input.GetAxis("Vertical") * movementSpeed;
+        float horizont = Input.GetAxis("Horizontal") * movementSpeed;
+        if (Input.GetKey(KeyCode.LeftShift) && vertical > 0)
+        {
+            vertical = vertical * 2.5f;
+            horizont = horizont * 2.5f;
+        }
+        ds.Drain(vertical, horizont);
 
         verticalVelocity += Physics.gravity.y * Time.deltaTime;
 
@@ -60,9 +74,29 @@ public class FPController : MonoBehaviour
 
         Vector3 speed = new Vector3(horizont, verticalVelocity, vertical);
         speed = transform.rotation * speed;
-        
+
+
         cc.Move(speed * Time.deltaTime);
-        
+
         #endregion
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            foreach (var mainWeapon in mainWeapons)
+            {
+                if (mainWeapon.activeSelf)
+                    mainWeapon.SetActive(false);
+                else if (!mainWeapon.activeSelf)
+                    mainWeapon.SetActive(true);
+            }
+        }
+
+        if (Kills == 4)
+        {
+            endText.enabled = true;
+        }
     }
 }

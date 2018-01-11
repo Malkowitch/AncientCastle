@@ -11,8 +11,12 @@ public class LaserScript : MonoBehaviour
     private LineRenderer _line;
     private Light _light;
     public Material _lineMaterial;
-    public float _gunRange = 100f;
-    public float _gunDam = 100f;
+    public float _gunRange;
+    public float _gunDam;
+    public AudioSource _sfx;
+
+    public bool isFiring;
+    public bool doubleWielding;
 
     public int MouseShooter = 0;
     public GameObject debrisPrefab;
@@ -28,6 +32,8 @@ public class LaserScript : MonoBehaviour
     {
         _line = GetComponent<LineRenderer>();
         _light = GetComponent<Light>();
+        _sfx = GetComponent<AudioSource>();
+
         _line.enabled = false;
         _light.enabled = false;
         _line.material = _lineMaterial;
@@ -36,6 +42,8 @@ public class LaserScript : MonoBehaviour
         shooting = false;
         firstHit = true;
         beamTimeR = beamTime;
+
+
     }
 
     // Update is called once per frame
@@ -44,10 +52,21 @@ public class LaserScript : MonoBehaviour
         _cdr -= Time.deltaTime;
         if (Input.GetMouseButtonDown(MouseShooter))
         {
-            _cd = _cdr;
-            shooting = true;
-            StopCoroutine("FireLaser");
-            StartCoroutine("FireLaser");
+            if (isFiring)
+            {
+                _cd = _cdr;
+                shooting = true;
+                StopCoroutine("FireLaser");
+                StartCoroutine("FireLaser");
+                if (doubleWielding)
+                {
+                    isFiring = false;
+                }
+            }
+            else
+            {
+                isFiring = true;
+            }
         }
         if (_cdr <= 0 && !Input.GetMouseButtonDown(MouseShooter))
         {
@@ -62,6 +81,7 @@ public class LaserScript : MonoBehaviour
         //while (Input.GetMouseButton(0))
         while (Input.GetMouseButton(0) && shooting)
         {
+            _sfx.Play();
             _line.material.mainTextureOffset = new Vector2(0, Time.time);
             beamTimeR -= Time.deltaTime;
             _line.enabled = true;
@@ -78,17 +98,20 @@ public class LaserScript : MonoBehaviour
 
             _line.SetPosition(1, endpoint);
 
-            GameObject go = hit.collider.gameObject;
+            if (hit.collider != null)
+            {
+                GameObject go = hit.collider.gameObject;
+                HasHealth h = go.GetComponent<HasHealth>();
+                if (h != null && firstHit)
+                {
+                    h.RecieveDamage(_gunDam);
+                    firstHit = false;
+                }
+                if (debrisPrefab != null && !go.tag.Equals("Enemy"))
+                {
 
-            HasHealth h = go.GetComponent<HasHealth>();
-            if (h != null && firstHit)
-            {
-                h.RecieveDamage(_gunDam);
-                firstHit = false;
-            }
-            if (debrisPrefab != null)
-            {
-                Instantiate(debrisPrefab, endpoint, Quaternion.identity);
+                    Instantiate(debrisPrefab, endpoint, Quaternion.identity);
+                }
             }
             if (beamTimeR <= 0)
             {
