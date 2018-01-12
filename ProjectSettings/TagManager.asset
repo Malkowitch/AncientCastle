@@ -12,6 +12,7 @@ TagManager:
   - Defeat
   - PlayerStamina
   - Crosshair
+  - AttackObject
   layers:
   - Default
   - TransparentFX

@@ -9,6 +9,7 @@ public class HasHealth : MonoBehaviour
     public float health = 250.0f;
     private Animator _animator;
     public float decay = 10.0f;
+    public bool isDead = false;
 
     private void Awake()
     {
@@ -25,6 +26,8 @@ public class HasHealth : MonoBehaviour
 
     private void Die()
     {
+        _animator.StopPlayback();
+        isDead = true;
         _animator.Play("Dead", 0, 0);
         gameObject.tag = "Dead";
         gameObject.GetComponent<CapsuleCollider>().enabled = false;
