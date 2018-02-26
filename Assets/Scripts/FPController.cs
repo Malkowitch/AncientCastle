@@ -18,13 +18,16 @@ public class FPController : MonoBehaviour
     #endregion
 
     public Text endText;
+    private int maxEnemy;
     public static int Kills { get; set; }
     #region Private
     private float verticalVelocity = 0;
     private Transform player;
     private CharacterController cc;
-    private GameObject[] mainWeapons;
+    public static GameObject[] mainWeapons;
     private DrainStamina ds;
+    private Text text;
+    private Text healthbar;
     #endregion
 
     // Use this for initialization
@@ -37,7 +40,20 @@ public class FPController : MonoBehaviour
         mainWeapons = GameObject.FindGameObjectsWithTag("MainWeapon");
         endText.enabled = false;
         ds = GetComponent<DrainStamina>();
+
+
+        healthbar = GameObject.FindGameObjectWithTag("PlayerHealth").GetComponent<Text>();
+        text = GameObject.FindGameObjectWithTag("Defeat").GetComponent<Text>();
+        text.enabled = false;
+        maxEnemy = GameObject.FindGameObjectsWithTag("Enemy").Length;
+
     }
+
+    public static void RefreshMainList()
+    {
+        mainWeapons = GameObject.FindGameObjectsWithTag("MainWeapon");
+    }
+
 
     // Update is called once per frame
     void FixedUpdate()
@@ -85,6 +101,8 @@ public class FPController : MonoBehaviour
 
     private void Update()
     {
+        healthbar.text = GetComponent<HasHealth>().health.ToString();
+
         if (Input.GetKeyDown(KeyCode.E))
         {
             foreach (var mainWeapon in mainWeapons)
@@ -96,9 +114,11 @@ public class FPController : MonoBehaviour
             }
         }
 
-        if (Kills == 4)
+        if (Kills == maxEnemy)
         {
+            Time.timeScale = 0;
             endText.enabled = true;
         }
     }
+
 }

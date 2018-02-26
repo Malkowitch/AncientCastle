@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(LineRenderer))]
 public class LaserScript : MonoBehaviour
@@ -13,12 +14,15 @@ public class LaserScript : MonoBehaviour
     public Material _lineMaterial;
     public float _gunRange;
     public float _gunDam;
-    public AudioSource _sfx;
+    public AudioSource shootSound;
+    public AudioSource reloadSound;
 
     public bool isFiring;
     public bool doubleWielding;
 
-    public int MouseShooter = 0;
+    public bool offHand;
+
+    public string MouseShooter;
     public GameObject debrisPrefab;
 
     private bool shooting;
@@ -27,13 +31,20 @@ public class LaserScript : MonoBehaviour
     private float beamTime = 3f;
     private float beamTimeR = 0f;
     private Vector3 CrosshairPlace;
+    
+    public float maxAmmo;
+    private float ammoRem;
+    public Vector2 ammoAnchorMin;
+    public Vector2 ammoAnchorMax;
+    public Vector2 ammoAnchorPivot;
+    private Text ammoText;
 
     // Use this for initialization
     void Start()
     {
         _line = GetComponent<LineRenderer>();
         _light = GetComponent<Light>();
-        _sfx = GetComponent<AudioSource>();
+        //shootSound = GetComponent<AudioSource>();
 
         CrosshairPlace = GameObject.FindGameObjectWithTag("Crosshair").transform.position;
 
@@ -46,13 +57,35 @@ public class LaserScript : MonoBehaviour
         firstHit = true;
         beamTimeR = beamTime;
 
+
+        ammoRem = maxAmmo;
+
+        GameObject newText = new GameObject("AmmoText");
+        newText.transform.SetParent(transform.parent.parent.parent.GetChild(1));
+        ammoText = newText.AddComponent<Text>();
+        float ammoXPos = -50f;
+        if (offHand)
+        {
+            ammoAnchorMin = new Vector2(0,0);
+            ammoAnchorMax = new Vector2(0, 0);
+            ammoXPos = 61f;
+        }
+        ammoText.rectTransform.localPosition = new Vector2(ammoXPos, 21.5f);
+        ammoText.rectTransform.anchorMin = ammoAnchorMin;
+        ammoText.rectTransform.anchorMax = ammoAnchorMax;
+        ammoText.rectTransform.pivot = ammoAnchorPivot;
+        ammoText.fontSize = 37;
+        ammoText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+        ammoText.color = new Color32(218, 16, 16, 132);
+        ammoText.text = ammoRem + "/" + maxAmmo;
+
     }
 
     // Update is called once per frame
     void Update()
     {
         _cdr -= Time.deltaTime;
-        if (Input.GetMouseButtonDown(MouseShooter))
+        if (Input.GetButtonDown(MouseShooter) && ammoRem != 0)
         {
             if (isFiring)
             {
@@ -60,6 +93,8 @@ public class LaserScript : MonoBehaviour
                 shooting = true;
                 StopCoroutine("FireLaser");
                 StartCoroutine("FireLaser");
+                ammoRem--;
+                ammoText.text = ammoRem + "/" + maxAmmo;
                 if (doubleWielding)
                 {
                     isFiring = false;
@@ -70,11 +105,22 @@ public class LaserScript : MonoBehaviour
                 isFiring = true;
             }
         }
-        if (_cdr <= 0 && !Input.GetMouseButtonDown(MouseShooter))
+        if (_cdr <= 0)
         {
             firstHit = true;
             shooting = false;
             beamTimeR = beamTime;
+        }
+        if (Input.GetKeyDown(KeyCode.R) && ammoRem != maxAmmo)
+        {
+            if (!offHand)
+                isFiring = true;
+            else
+                isFiring = false;
+
+            reloadSound.Play();
+            ammoRem = maxAmmo;
+            ammoText.text = ammoRem + "/" + maxAmmo;
         }
     }
 
@@ -83,7 +129,7 @@ public class LaserScript : MonoBehaviour
         //while (Input.GetMouseButton(0))
         while (Input.GetMouseButton(0) && shooting)
         {
-            _sfx.Play();
+            shootSound.Play();
             _line.material.mainTextureOffset = new Vector2(0, Time.time);
             beamTimeR -= Time.deltaTime;
             _line.enabled = true;

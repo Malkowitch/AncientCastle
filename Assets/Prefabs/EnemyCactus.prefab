@@ -184,8 +184,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4459809690686240}
-  - component: {fileID: 114830409641992858}
   - component: {fileID: 135244102324245514}
+  - component: {fileID: 114006021936409796}
   m_Layer: 2
   m_Name: AttackingObject
   m_TagString: AttackObject
@@ -344,6 +344,7 @@ GameObject:
   - component: {fileID: 95910113930218866}
   - component: {fileID: 136034853479597114}
   - component: {fileID: 114781894435130072}
+  - component: {fileID: 114611887510829588}
   m_Layer: 0
   m_Name: EnemyCactus
   m_TagString: Enemy
@@ -916,6 +917,39 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114006021936409796
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1453613306599396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d26500664f5f67c449acc6ab8cdc0991, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114611887510829588
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1840969913120236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0232d2246b91c1e47aeca01c2395d4a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SightRange: 30
+  ViewRangeAngle: 110
+  playerInSight: 0
+  misfire: 3
+  objectInsight: {fileID: 0}
+  attackObject: {fileID: 1453613306599396}
+  player: {fileID: 0}
+  projectilePrefab: {fileID: 1332339495200218, guid: bb12552dc914fed49af689260153f83f,
+    type: 2}
+  ani: {fileID: 0}
+  cd: 0.275
 --- !u!114 &114781894435130072
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -929,21 +963,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 250
   decay: 5
---- !u!114 &114830409641992858
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1453613306599396}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0232d2246b91c1e47aeca01c2395d4a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SightRange: 30
-  ViewRangeAngle: 110
-  playerInSight: 0
-  misfire: 3
+  isDead: 0
+  isEnemy: 1
 --- !u!135 &135244102324245514
 SphereCollider:
   m_ObjectHideFlags: 1

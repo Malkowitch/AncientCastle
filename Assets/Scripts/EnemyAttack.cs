@@ -11,55 +11,66 @@ public class EnemyAttack : MonoBehaviour
     public bool playerInSight;
     public float misfire = 3f;
 
+    public Collider objectInsight;
+
     private SphereCollider col;
     public GameObject attackObject;
 
-    private GameObject player;
+    public GameObject player;
 
-    private Camera cam;
-    private Animator ani;
+    public GameObject projectilePrefab;
+    
+    public Animator ani;
+
+    public float cd;
+    private float cdr;
     // Use this for initialization
     void Awake()
     {
         ani = GetComponent<Animator>();
-        cam = GetComponent<Camera>();
+        //cam = GetComponent<Camera>();
         player = GameObject.FindGameObjectWithTag("Player");
         col = attackObject.GetComponent<SphereCollider>();
         playerInSight = false;
-
+        cd = 0.5f;
+        cdr = cd;
     }
-
     // Update is called once per frame
     void Update()
     {
-
-    }
-    private void OnTriggerStay(Collider other)
-    {
-        if (!GetComponent<HasHealth>().isDead)
+        if (objectInsight != null)
         {
-
-            if (other.gameObject == player)
+            if (!GetComponent<HasHealth>().isDead)
             {
-                playerInSight = false;
-                Vector3 direction = other.transform.position - transform.position;
-                float angle = Vector3.Angle(direction, transform.forward);
-                if (angle < ViewRangeAngle * 0.5f)
+                if (objectInsight.gameObject == player)
                 {
-                    RaycastHit hit;
-                    if (Physics.Raycast(transform.position + transform.up, direction.normalized, out hit, col.radius))
+                    playerInSight = false;
+                    Vector3 direction = objectInsight.transform.position - transform.position;
+                    float angle = Vector3.Angle(direction, transform.forward);
+                    cdr -= Time.deltaTime;
+                    if (angle < ViewRangeAngle * 0.5f)
                     {
-                        if (hit.collider.gameObject.Equals(player))
+                        RaycastHit hit;
+                        if (Physics.Raycast(transform.position + transform.up, direction.normalized, out hit, col.radius))
                         {
-                            Debug.DrawLine(transform.position, RandomHit(hit.collider.gameObject.transform), RandomColor());
-                            ani.Play("Attack");
-                            playerInSight = true;
+                            if (hit.collider.gameObject.Equals(player))
+                            {
+                                if (cdr <= 0)
+                                {
+                                    Instantiate(projectilePrefab, transform.GetChild(3).position, transform.rotation);
+                                    cdr = cd;
+                                }
+                                ani.Play("Attack");
+                                playerInSight = true;
+                            }
                         }
                     }
                 }
             }
         }
+
     }
+
     private Vector3 RandomHit(Transform _toHit)
     {
         switch (new System.Random().Next(1, 6))
@@ -80,14 +91,6 @@ public class EnemyAttack : MonoBehaviour
             case 3: return Color.red;
             case 4: return Color.yellow;
             default: return Color.white;
-        }
-    }
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject == player)
-        {
-            ani.Play("Idle");
-            playerInSight = false;
         }
     }
 }
