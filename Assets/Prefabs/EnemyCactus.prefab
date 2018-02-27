@@ -943,6 +943,7 @@ MonoBehaviour:
   ViewRangeAngle: 110
   playerInSight: 0
   misfire: 3
+  rotateSpeed: 2
   objectInsight: {fileID: 0}
   attackObject: {fileID: 1453613306599396}
   player: {fileID: 0}

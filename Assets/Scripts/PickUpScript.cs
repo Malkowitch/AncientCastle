@@ -47,6 +47,7 @@ public class PickUpScript : MonoBehaviour
 
     private void DualWeapns()
     {
+        FPController.PUActivateWeapon();
         foreach (Transform child in gameObject.transform.GetChild(0).GetChild(0))
         {
             if (child.name.Equals("GunTip"))

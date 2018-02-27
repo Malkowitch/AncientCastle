@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 [RequireComponent(typeof(CharacterController))]
 public class FPController : MonoBehaviour
 {
@@ -103,21 +104,34 @@ public class FPController : MonoBehaviour
     {
         healthbar.text = GetComponent<HasHealth>().health.ToString();
 
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            foreach (var mainWeapon in mainWeapons)
-            {
-                if (mainWeapon.activeSelf)
-                    mainWeapon.SetActive(false);
-                else if (!mainWeapon.activeSelf)
-                    mainWeapon.SetActive(true);
-            }
-        }
-
+        if (Input.GetKeyDown(KeyCode.Alpha1) && mainWeapons.Length > 0)
+            WeaponActive();
         if (Kills == maxEnemy)
         {
             Time.timeScale = 0;
             endText.enabled = true;
+        }
+    }
+
+    private void WeaponActive()
+    {
+        foreach (GameObject mainWeapon in mainWeapons)
+        {
+            mainWeapon.GetComponentInChildren<LaserScript>().ShowHideAmmoText();
+
+            mainWeapon.SetActive(UniversalMethods.ReBoolean(mainWeapon.activeSelf));
+        }
+    }
+    public static void PUActivateWeapon()
+    {
+        foreach (GameObject mainWeapon in mainWeapons)
+        {
+            if (!mainWeapon.activeSelf)
+            {
+                mainWeapon.GetComponentInChildren<LaserScript>().ShowHideAmmoText();
+                
+                mainWeapon.SetActive(UniversalMethods.ReBoolean(mainWeapon.activeSelf));
+            }
         }
     }
 

@@ -24,7 +24,10 @@ public class Detector : MonoBehaviour {
     {
         if (other.gameObject == ea.player)
         {
-            ea.ani.Play("Idle");
+            if (!ea.CheckIfDead())
+            {
+                ea.ani.Play("Idle");
+            }
             ea.playerInSight = false;
             ea.objectInsight = null;
         }

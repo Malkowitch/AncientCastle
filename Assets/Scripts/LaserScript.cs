@@ -39,8 +39,10 @@ public class LaserScript : MonoBehaviour
     public Vector2 ammoAnchorPivot;
     private Text ammoText;
 
+    public GameObject AmmoTextObject;
+
     // Use this for initialization
-    void Start()
+    private void Start()
     {
         _line = GetComponent<LineRenderer>();
         _light = GetComponent<Light>();
@@ -56,33 +58,45 @@ public class LaserScript : MonoBehaviour
         shooting = false;
         firstHit = true;
         beamTimeR = beamTime;
+        string searchPara = "";
+        if (!offHand)
+        {
+            searchPara = "AmmoTextR";
+        }
+        else
+        {
+            searchPara = "AmmoTextL";
+        }
 
-
+        foreach (Transform item in GameObject.Find("UI").transform)
+        {
+            if (item.tag.Equals(searchPara))
+            {
+                AmmoTextObject = item.gameObject;
+                break;
+            }
+        }
+        AmmoTextObject.SetActive(true);
+        ammoText = AmmoTextObject.GetComponent<Text>();
         ammoRem = maxAmmo;
 
-        GameObject newText = new GameObject("AmmoText");
-        newText.transform.SetParent(transform.parent.parent.parent.GetChild(1));
-        ammoText = newText.AddComponent<Text>();
-        float ammoXPos = -50f;
-        if (offHand)
-        {
-            ammoAnchorMin = new Vector2(0,0);
-            ammoAnchorMax = new Vector2(0, 0);
-            ammoXPos = 61f;
-        }
-        ammoText.rectTransform.localPosition = new Vector2(ammoXPos, 21.5f);
-        ammoText.rectTransform.anchorMin = ammoAnchorMin;
-        ammoText.rectTransform.anchorMax = ammoAnchorMax;
-        ammoText.rectTransform.pivot = ammoAnchorPivot;
-        ammoText.fontSize = 37;
-        ammoText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-        ammoText.color = new Color32(218, 16, 16, 132);
         ammoText.text = ammoRem + "/" + maxAmmo;
 
     }
 
+    public void ShowHideAmmoText()
+    {
+        AmmoTextObject.SetActive(ReBoolean(AmmoTextObject.activeSelf));
+    }
+    private bool ReBoolean(bool _toBool)
+    {
+        if (_toBool)
+            return false;
+        return true;
+    }
+
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         _cdr -= Time.deltaTime;
         if (Input.GetButtonDown(MouseShooter) && ammoRem != 0)
@@ -91,7 +105,6 @@ public class LaserScript : MonoBehaviour
             {
                 _cd = _cdr;
                 shooting = true;
-                StopCoroutine("FireLaser");
                 StartCoroutine("FireLaser");
                 ammoRem--;
                 ammoText.text = ammoRem + "/" + maxAmmo;
@@ -122,9 +135,10 @@ public class LaserScript : MonoBehaviour
             ammoRem = maxAmmo;
             ammoText.text = ammoRem + "/" + maxAmmo;
         }
+        
     }
 
-    IEnumerator FireLaser()
+    private IEnumerator FireLaser()
     {
         //while (Input.GetMouseButton(0))
         while (Input.GetMouseButton(0) && shooting)

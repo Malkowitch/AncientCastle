@@ -10,6 +10,7 @@ public class EnemyAttack : MonoBehaviour
     public float ViewRangeAngle = 110f;
     public bool playerInSight;
     public float misfire = 3f;
+    public float rotateSpeed;
 
     public Collider objectInsight;
 
@@ -25,7 +26,7 @@ public class EnemyAttack : MonoBehaviour
     public float cd;
     private float cdr;
     // Use this for initialization
-    void Awake()
+    private void Awake()
     {
         ani = GetComponent<Animator>();
         //cam = GetComponent<Camera>();
@@ -36,7 +37,7 @@ public class EnemyAttack : MonoBehaviour
         cdr = cd;
     }
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (objectInsight != null)
         {
@@ -57,9 +58,14 @@ public class EnemyAttack : MonoBehaviour
                             {
                                 if (cdr <= 0)
                                 {
-                                    Instantiate(projectilePrefab, transform.GetChild(3).position, transform.rotation);
+                                    Vector3 shootPosition = transform.GetChild(3).position;
+                                    shootPosition = shootPosition + Vector3.up;
+                                    Instantiate(projectilePrefab, shootPosition, transform.rotation);
+                                    //Debug.Log(hit.collider.gameObject.tag);
                                     cdr = cd;
                                 }
+                                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * rotateSpeed);
+
                                 ani.Play("Attack");
                                 playerInSight = true;
                             }
@@ -71,26 +77,8 @@ public class EnemyAttack : MonoBehaviour
 
     }
 
-    private Vector3 RandomHit(Transform _toHit)
+    public bool CheckIfDead()
     {
-        switch (new System.Random().Next(1, 6))
-        {
-            case 1: return _toHit.position + _toHit.up * misfire;
-            case 2: return _toHit.position - _toHit.up * misfire;
-            case 3: return _toHit.position + _toHit.right * misfire;
-            case 4: return _toHit.position - _toHit.right * misfire;
-            default: return _toHit.position;
-        }
-    }
-    private Color RandomColor()
-    {
-        switch (new System.Random().Next(1, 6))
-        {
-            case 1: return Color.black;
-            case 2: return Color.blue;
-            case 3: return Color.red;
-            case 4: return Color.yellow;
-            default: return Color.white;
-        }
+        return GetComponent<HasHealth>().isDead;
     }
 }
