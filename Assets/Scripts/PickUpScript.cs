@@ -26,7 +26,7 @@ public class PickUpScript : MonoBehaviour
             case "LaserPistol": LaserPistolInstantiate(); break;
             default: break;
         }
-        FPController.RefreshMainList();
+        gameObject.GetComponent<WeaponsInventory>().RefreshMainList();
     }
 
     private void LaserPistolInstantiate()
@@ -47,7 +47,7 @@ public class PickUpScript : MonoBehaviour
 
     private void DualWeapns()
     {
-        FPController.PUActivateWeapon();
+        gameObject.GetComponent<WeaponsInventory>().PUActivateWeapon();
         foreach (Transform child in gameObject.transform.GetChild(0).GetChild(0))
         {
             if (child.name.Equals("GunTip"))

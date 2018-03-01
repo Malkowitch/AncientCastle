@@ -22,8 +22,8 @@ public class ProjectileThorn : MonoBehaviour
             Debug.Log(_trig.gameObject.tag);
             if (_trig.gameObject.tag.Equals("Player"))
             {
-                _trig.gameObject.GetComponent<HasHealth>().RecieveDamage(damage);
-                _trig.gameObject.GetComponent<TakenHit>().GotHit();
+                _trig.gameObject.GetComponent<HealthScript>().RecieveDamage(damage);
+                _trig.gameObject.GetComponent<PlayerTakenHit>().GotHit();
                 Destroy(gameObject);
             }
             stop = true;

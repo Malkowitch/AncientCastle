@@ -41,7 +41,7 @@ public class EnemyAttack : MonoBehaviour
     {
         if (objectInsight != null)
         {
-            if (!GetComponent<HasHealth>().isDead)
+            if (!GetComponent<HealthScript>().isDead)
             {
                 if (objectInsight.gameObject == player)
                 {
@@ -79,6 +79,6 @@ public class EnemyAttack : MonoBehaviour
 
     public bool CheckIfDead()
     {
-        return GetComponent<HasHealth>().isDead;
+        return GetComponent<HealthScript>().isDead;
     }
 }

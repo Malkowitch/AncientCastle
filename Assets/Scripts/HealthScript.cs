@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HasHealth : MonoBehaviour
+public class HealthScript : MonoBehaviour
 {
 
     public float health;
@@ -16,9 +16,7 @@ public class HasHealth : MonoBehaviour
     {
         health -= _amt;
         if (isEnemy)
-        {
             GetComponent<Animator>().Play("Get_hit");
-        }
         if (health <= 0)
             Die();
     }

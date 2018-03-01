@@ -105,7 +105,7 @@ public class LaserScript : MonoBehaviour
             {
                 _cd = _cdr;
                 shooting = true;
-                StartCoroutine("FireLaser");
+                StartCoroutine(FireLaser());
                 ammoRem--;
                 ammoText.text = ammoRem + "/" + maxAmmo;
                 if (doubleWielding)
@@ -164,7 +164,7 @@ public class LaserScript : MonoBehaviour
             if (hit.collider != null)
             {
                 GameObject go = hit.collider.gameObject;
-                HasHealth h = go.GetComponent<HasHealth>();
+                HealthScript h = go.GetComponent<HealthScript>();
                 if (h != null && firstHit)
                 {
                     h.RecieveDamage(_gunDam);
